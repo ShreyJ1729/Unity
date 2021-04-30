@@ -78,7 +78,6 @@ public class SimplexNoise
         new[] {0, -1, 1}, new[] {0, 1, -1}, new[] {0, -1, -1}
     };
     #endregion
-
     public SimplexNoise()
     {
         Randomize(0);

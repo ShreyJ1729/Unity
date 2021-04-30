@@ -3,8 +3,8 @@ using UnityEngine;
 public class SphereFace
 {
     // Specify resolution of SphereFace (vertices per dimension)
+    public ShapeGenerator shapeGenerator;
     public int resolution;
-    public ShapeSettings shapeSettings;
     public Mesh mesh;
     
     // Local coordinate system
@@ -12,12 +12,12 @@ public class SphereFace
     private Vector3 localJ;
     private Vector3 localK;
     
-    public SphereFace(Mesh mesh, int resolution, Vector3 localK, ShapeSettings shapeSettings)
+    public SphereFace(ShapeGenerator shapeGenerator, Mesh mesh, int resolution, Vector3 localK, ShapeSettings shapeSettings)
     {
+        this.shapeGenerator = shapeGenerator;
         this.mesh = mesh;
         this.resolution = resolution;
         this.localK = localK;
-        this.shapeSettings = shapeSettings;
 
         // Find local directions. localI from swapping around coords and k x i = j
         localI = new Vector3(localK.y, localK.z, localK.x);
@@ -39,7 +39,7 @@ public class SphereFace
                 Vector2 percentTraveled = new Vector2(x, y) / (resolution - 1);
                 Vector3 pointOnUnitCube = localK + (percentTraveled.x-0.5f)*2*localI + (percentTraveled.y-0.5f)*2*localJ;
                 Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
-                vertices[y * resolution + x] = shapeSettings.ScaleByRadius(pointOnUnitSphere);
+                vertices[y * resolution + x] = shapeGenerator.CalcPointOnSphere(pointOnUnitSphere);
                 
                 if ( (x != resolution - 1) && (y != resolution - 1))
                 {
@@ -62,7 +62,8 @@ public class SphereFace
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         
-        // Normals point straight out from center
-        mesh.normals = vertices;
+        // Normals point straight out from center but manually assigning causes material rendering problem
+        // mesh.normals = vertices;
+        mesh.RecalculateNormals();
     }
 }

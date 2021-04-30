@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d58a15cd9d048b1f9735a2f22bc3a8d, type: 3}
   m_Name: Color
   m_EditorClassIdentifier: 
-  planetColor: {r: 0.85882354, g: 0.56033516, b: 0.4392157, a: 0}
+  planetColor: {r: 0.6981132, g: 0.50711995, b: 0.63444877, a: 0}
+  planetMaterial: {fileID: 2100000, guid: 762506ed9ac19613582e394bf2947bc9, type: 2}

@@ -11,6 +11,9 @@ public class Planet : MonoBehaviour
     public ColorSettings colorSettings;
     [HideInInspector] public bool shapeSettingsFoldout;
     [HideInInspector] public bool colorSettingsFoldout;
+
+    public ShapeGenerator shapeGenerator;
+    public ColorGenerator colorGenerator;
     
     private MeshFilter[] meshFilters;
 
@@ -25,6 +28,9 @@ public class Planet : MonoBehaviour
 
     public void InitializePlanet()
     {
+        shapeGenerator = new ShapeGenerator(shapeSettings);
+        colorGenerator = new ColorGenerator(colorSettings);
+        
         if (meshFilters == default(MeshFilter[]) || meshFilters.Length == 0)
         {
             meshFilters = new MeshFilter[6];
@@ -40,11 +46,13 @@ public class Planet : MonoBehaviour
                 sphereFace.transform.parent = this.transform;
 
                 meshFilters[i] = sphereFace.AddComponent<MeshFilter>();
-                sphereFace.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));;
+                sphereFace.AddComponent<MeshRenderer>();
             }
 
+            meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
+
             meshFilters[i].sharedMesh = new Mesh();
-            sphereFaces[i] = new SphereFace(meshFilters[i].sharedMesh, resolution, directions[i], shapeSettings);
+            sphereFaces[i] = new SphereFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i], shapeSettings);
         }
     }
 
@@ -80,5 +88,6 @@ public class Planet : MonoBehaviour
         {
             face.BuildMesh();
         }
+        colorGenerator.UpdateElevation(shapeGenerator.elevationMinMax);
     }
 }
